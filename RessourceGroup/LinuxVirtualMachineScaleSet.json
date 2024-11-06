@@ -47,7 +47,7 @@
         "description": "Administrator password on all VMs"
       }
     },
-    "customData" {
+    "customData": {
       "type": "string",
       "metadata": {
         "description": "Custom Data"
