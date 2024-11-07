@@ -15,9 +15,7 @@ variables:
 - name: "CloudInitContent"
 
 steps:
-- script:
-    echo $(Build.SourcesDirectory)
-    cd $(Build.SourcesDirectory)
+- bash:
     tree $(Build.SourcesDirectory)
 
 - task: AzureResourceManagerTemplateDeployment@3
