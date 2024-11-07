@@ -27,8 +27,8 @@ steps:
     resourceGroupName: 'KeyVault'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirector)\azuredeploy.json'
-    csmParametersFile: '$(Build.SourcesDirector)\azuredeploy.parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/KeyVault/azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/KeyVault/azuredeploy.parameters.json'
     deploymentMode: 'Incremental'
     
 - task: AzureKeyVault@2
@@ -42,7 +42,7 @@ steps:
   inputs:
     targetType: 'inline'
     script: |
-      $CloudContent = Get-Content -Path .\RessourceGroup\Cloud-Init.txt -Raw
+      $CloudContent = Get-Content -Path ./RessourceGroup/Cloud-Init.txt -Raw
       Write-Host $CloudContent
       $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
       Write-Host $encodedContent
@@ -60,7 +60,7 @@ steps:
     resourceGroupName: 'Devoir1'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)\RessourceGroup\LinuxVirtualMachineScaleSet.json'
-    csmParametersFile: '$(Build.SourcesDirectory)\RessourceGroup\LinuxVirtualMachineScaleSet.parameters.json'
+    csmFile: '$(Build.SourcesDirectory)/RessourceGroup/LinuxVirtualMachineScaleSet.json'
+    csmParametersFile: '$(Build.SourcesDirectory)/RessourceGroup/LinuxVirtualMachineScaleSet.parameters.json'
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Incremental'
