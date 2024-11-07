@@ -10,7 +10,7 @@
     },
     "secret1Secret": {
       "type": "String"
-    },
+    }
   },
   "variables": {},
   "resources": [
