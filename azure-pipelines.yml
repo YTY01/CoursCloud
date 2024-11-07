@@ -1,5 +1,6 @@
 # Starter pipeline
 
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -18,6 +19,19 @@ variables:
 
 steps:
 
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1(188533e8-ed54-47d2-857a-0620ebdeb029)'
+    subscriptionId: '188533e8-ed54-47d2-857a-0620ebdeb029'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'KeyVault'
+    location: 'East US'
+    templateLocation: 'Linked artifact'
+    csmFile: '\KeyVault\azuredeploy.json'
+    csmParametersFile: '\KeyVault\azuredeploy.parameters.json'
+    deploymentMode: 'Incremental'
+    
 - task: AzureKeyVault@2
   inputs:
     azureSubscription: 'Azure subscription 1(188533e8-ed54-47d2-857a-0620ebdeb029)'
