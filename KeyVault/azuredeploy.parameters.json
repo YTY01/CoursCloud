@@ -4,6 +4,12 @@
   "parameters": {
     "vaults_KeyVault_CoursCloud_name": {
       "value": "KeyVault-CoursCloud"
+    },
+    "adminPassSecret": {
+      "value": null
+    },
+    "secret1Secret": {
+      "value": null
     }
   }
 }

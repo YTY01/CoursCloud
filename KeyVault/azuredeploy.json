@@ -4,7 +4,13 @@
   "parameters": {
     "vaults_KeyVault_CoursCloud_name": {
       "type": "String"
-    }
+    },
+    "adminPassSecret": {
+      "type": "String"
+    },
+    "secret1Secret": {
+      "type": "String"
+    },
   },
   "variables": {},
   "resources": [
@@ -42,7 +48,8 @@
       "properties": {
         "attributes": {
           "enabled": true
-        }
+        },
+        "value": "[parameters('adminPassSecret')]"
       }
     },
     {
@@ -56,7 +63,8 @@
       "properties": {
         "attributes": {
           "enabled": true
-        }
+        },
+        "value": "[parameters('secret1Secret')]"
       }
     }
   ]
