@@ -15,7 +15,9 @@ variables:
 - name: "CloudInitContent"
 
 steps:
-    
+- script:
+    echo $(Build.SourcesDirectory)
+
 - task: AzureResourceManagerTemplateDeployment@3
   inputs:
     deploymentScope: 'Resource Group'
@@ -25,8 +27,8 @@ steps:
     resourceGroupName: 'KeyVault'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: '$(System.DefaultWorkingDirectory)\azuredeploy.json'
-    csmParametersFile: '$(System.DefaultWorkingDirectory)\azuredeploy.parameters.json'
+    csmFile: '$(Build.SourcesDirector)\azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirector)\azuredeploy.parameters.json'
     deploymentMode: 'Incremental'
     
 - task: AzureKeyVault@2
