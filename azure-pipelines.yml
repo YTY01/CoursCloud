@@ -25,8 +25,8 @@ steps:
     resourceGroupName: 'KeyVault'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)\**\azuredeploy.json'
-    csmParametersFile: '$(Build.SourcesDirectory)\**\azuredeploy.parameters.json'
+    csmFile: '$(Agent.BuildDirectory)\**\azuredeploy.json'
+    csmParametersFile: '$(Agent.BuildDirectory)\**\azuredeploy.parameters.json'
     deploymentMode: 'Incremental'
     
 - task: AzureKeyVault@2
