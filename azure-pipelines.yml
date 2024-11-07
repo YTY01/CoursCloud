@@ -1,4 +1,5 @@
 # Starter pipeline
+
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
@@ -13,7 +14,17 @@ variables:
 - name: CloudInitContent
 
 
+
+
 steps:
+
+- task: AzureKeyVault@2
+  inputs:
+    azureSubscription: 'Azure subscription 1(188533e8-ed54-47d2-857a-0620ebdeb029)'
+    KeyVaultName: 'KeyVault-CoursCloud'
+    SecretsFilter: 'AdminPass'
+    RunAsPreJob: false
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -36,7 +47,7 @@ steps:
     resourceGroupName: 'Devoir1'
     location: 'East US'
     templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourceDirectory)\RessourceGroup\LinuxVirtualMachineScaleSet.json'
-    csmParametersFile: '$(Build.SourceDirectory)\RessourceGroup\LinuxVirtualMachineScaleSet.parameters.json'
+    csmFile: '$(Build.SourcesDirectory)\RessourceGroup\LinuxVirtualMachineScaleSet.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\RessourceGroup\LinuxVirtualMachineScaleSet.parameters.json'
     overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
     deploymentMode: 'Incremental'
