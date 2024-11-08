@@ -17,6 +17,15 @@
         "networkInterfaces_VM1_vnet_nic01_f404804e_externalid": {
             "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkInterfaces/VM1-vnet-nic01-f404804e",
             "type": "String"
+        },
+        "adminPassSecret": {
+            "type": "string"
+        },
+        "secret1Secret": {
+            "type": "string"
+        },
+        "keyVaultResourceId": {
+            "type": "string"
         }
     },
     "variables": {},
@@ -66,22 +75,28 @@
                     "computerName": "vm-groupsU1YX0A",
                     "adminUsername": "coursCloud",
                     "linuxConfiguration": {
-                        "disablePasswordAuthentication": true,
-                        "ssh": {
-                            "publicKeys": [
-                                {
-                                    "path": "/home/coursCloud/.ssh/authorized_keys",
-                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClAXh5lKVUtKhUcY5qID222s76EP469+n6MtGjDMmOEC7iQnznprdnPxNua2s3M+HUhgs6FZt8MQXtRFpmgR2XFMPXVf2neDXFRCqpYaxYQ4EnlYxSxTx+BiUICPlCcyZgwuAxj3pZIoO8XN/FzEmAiD41Z5az9ewxNA09sxJEXtl+BypFkrr8weXZxXXemXoSFR7hz7ciCnaKYIRYhXA/LpFK8rkHd8ByEwiz3Jnf31sbRGv6GggdRsp3gGCgdmBaqrMkCu1nLh1hP+1jubks+MbV/On/MFnDj1CMr11s1juNh5+3Q7ylVlGbx5rtmQwgmTks2KHgKLKA7WRcMFOuqlOshmmMTxlXjDFZ9FLuxcPOoZiRk0dxaaSYCKdzZg8kwgmwAr7PCUgrl1u4PBi2ByYE8XEOsq+ZY4hc7NYB2C+0wevFgqNCN7bU+Gn6qfLTxlNkCwa8O+NZje4pDriN0irLX25v6rOLdlMLQPAnfeUH7lFX+JG0aKeYZj4DHpU= generated-by-azure"
-                                }
-                            ]
-                        },
+                        "disablePasswordAuthentication": false,
                         "provisionVMAgent": true,
                         "patchSettings": {
                             "patchMode": "ImageDefault",
                             "assessmentMode": "ImageDefault"
                         }
                     },
-                    "secrets": [],
+                    "secrets": [
+                        {
+                            "sourceVault": {
+                                "id": "[parameters('keyVaultResourceId')]"
+                            },
+                            "vaultSecrets": [
+                                {
+                                    "secretUrl": "[parameters('adminPassSecret')]"
+                                },
+                                {
+                                    "secretUrl": "[parameters('secret1Secret')]"
+                                }
+                            ]
+                        }
+                    ],
                     "allowExtensionOperations": true,
                     "requireGuestProvisionSignal": true
                 },
