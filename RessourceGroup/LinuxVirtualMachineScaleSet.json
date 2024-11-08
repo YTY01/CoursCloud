@@ -2,183 +2,112 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualMachineScaleSets_VM_group_name": {
+        "virtualMachines_VM_group_93ae4b66_name": {
+            "defaultValue": "VM-group_93ae4b66",
             "type": "String"
         },
-        "virtualNetworks_VM1_vnet_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet",
+        "virtualMachineScaleSets_VM_group_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Compute/virtualMachineScaleSets/VM-group",
             "type": "String"
         },
-        "loadBalancers_LoadBalancer_Devoir1_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/loadBalancers/LoadBalancer_Devoir1",
+        "disks_VM_group_93ae4b66_OsDisk_1_bfec9c5ce4084e0e86d54f99b782b9f3_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Compute/disks/VM-group_93ae4b66_OsDisk_1_bfec9c5ce4084e0e86d54f99b782b9f3",
             "type": "String"
         },
-        "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
+        "networkInterfaces_VM1_vnet_nic01_f404804e_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkInterfaces/VM1-vnet-nic01-f404804e",
             "type": "String"
-        },
-        "adminPassSecret": {
-            "type": "securestring"
-        },
-        "secret1Secret": {
-            "type": "securestring"
         }
     },
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2024-07-01",
-            "name": "[parameters('virtualMachineScaleSets_VM_group_name')]",
+            "name": "[parameters('virtualMachines_VM_group_93ae4b66_name')]",
             "location": "eastus",
-            "sku": {
-                "name": "Standard_DC1s_v2",
-                "tier": "Standard",
-                "capacity": 2
+            "tags": {
+                "VirtualMachineProfileTimeCreated": "11/5/2024 12:51:55 AM +00:00"
             },
             "zones": [
-                "1",
-                "2"
+                "1"
             ],
             "properties": {
-                "singlePlacementGroup": false,
-                "orchestrationMode": "Flexible",
-                "upgradePolicy": {
-                    "mode": "Manual"
+                "hardwareProfile": {
+                    "vmSize": "Standard_DC1s_v2"
                 },
-                "scaleInPolicy": {
-                    "rules": [
-                        "Default"
-                    ],
-                    "forceDeletion": false
-                },
-                "virtualMachineProfile": {
-                    "osProfile": {
-                        "computerNamePrefix": "vm-groups",
-                        "adminUsername": "coursCloud",
-                        "adminPassword": "[parameters('adminPassSecret')]",
-                        "linuxConfiguration": {
-                            "disablePasswordAuthentication": true,
-                            "ssh": {
-                                "publicKeys": [
-                                    {
-                                        "path": "/home/coursCloud/.ssh/authorized_keys",
-                                        "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClAXh5lKVUtKhUcY5qID222s76EP469+n6MtGjDMmOEC7iQnznprdnPxNua2s3M+HUhgs6FZt8MQXtRFpmgR2XFMPXVf2neDXFRCqpYaxYQ4EnlYxSxTx+BiUICPlCcyZgwuAxj3pZIoO8XN/FzEmAiD41Z5az9ewxNA09sxJEXtl+BypFkrr8weXZxXXemXoSFR7hz7ciCnaKYIRYhXA/LpFK8rkHd8ByEwiz3Jnf31sbRGv6GggdRsp3gGCgdmBaqrMkCu1nLh1hP+1jubks+MbV/On/MFnDj1CMr11s1juNh5+3Q7ylVlGbx5rtmQwgmTks2KHgKLKA7WRcMFOuqlOshmmMTxlXjDFZ9FLuxcPOoZiRk0dxaaSYCKdzZg8kwgmwAr7PCUgrl1u4PBi2ByYE8XEOsq+ZY4hc7NYB2C+0wevFgqNCN7bU+Gn6qfLTxlNkCwa8O+NZje4pDriN0irLX25v6rOLdlMLQPAnfeUH7lFX+JG0aKeYZj4DHpU= generated-by-azure"
-                                    }
-                                ]
-                            },
-                            "provisionVMAgent": true,
-                            "patchSettings": {
-                                "patchMode": "ImageDefault",
-                                "assessmentMode": "ImageDefault"
-                            }
-                        },
-                        "secrets": [
-                            {
-                                "sourceVault": {
-                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
-                                },
-                                "vaultCertificates": [
-                                    {
-                                        "certificateUrl": "[parameters('secret1Secret')]"
-                                    }
-                                ]
-                            }
-                        ],
-                        "allowExtensionOperations": true,
-                        "requireGuestProvisionSignal": true
-                    },
-                    "storageProfile": {
-                        "osDisk": {
-                            "osType": "Linux",
-                            "createOption": "FromImage",
-                            "caching": "ReadWrite",
-                            "managedDisk": {
-                                "storageAccountType": "Premium_LRS"
-                            },
-                            "deleteOption": "Delete",
-                            "diskSizeGB": 30
-                        },
-                        "imageReference": {
-                            "publisher": "canonical",
-                            "offer": "ubuntu-24_04-lts",
-                            "sku": "server",
-                            "version": "latest"
-                        },
-                        "diskControllerType": "SCSI"
-                    },
-                    "networkProfile": {
-                        "networkApiVersion": "2020-11-01",
-                        "networkInterfaceConfigurations": [
-                            {
-                                "name": "VM1-vnet-nic01",
-                                "properties": {
-                                    "primary": true,
-                                    "enableAcceleratedNetworking": false,
-                                    "disableTcpStateTracking": false,
-                                    "enableIPForwarding": false,
-                                    "auxiliaryMode": "None",
-                                    "auxiliarySku": "None",
-                                    "deleteOption": "Delete",
-                                    "ipConfigurations": [
-                                        {
-                                            "name": "VM1-vnet-nic01-defaultIpConfiguration",
-                                            "properties": {
-                                                "privateIPAddressVersion": "IPv4",
-                                                "subnet": {
-                                                    "id": "[concat(parameters('virtualNetworks_VM1_vnet_externalid'), '/subnets/default')]"
-                                                },
-                                                "primary": true,
-                                                "publicIPAddressConfiguration": {
-                                                    "name": "publicIp-VM1-vnet-nic01",
-                                                    "properties": {
-                                                        "idleTimeoutInMinutes": 15,
-                                                        "ipTags": [],
-                                                        "publicIPAddressVersion": "IPv4"
-                                                    }
-                                                },
-                                                "applicationSecurityGroups": [],
-                                                "loadBalancerBackendAddressPools": [
-                                                    {
-                                                        "id": "[concat(parameters('loadBalancers_LoadBalancer_Devoir1_externalid'), '/backendAddressPools/BackEnd_Pool')]"
-                                                    }
-                                                ],
-                                                "applicationGatewayBackendAddressPools": []
-                                            }
-                                        }
-                                    ],
-                                    "networkSecurityGroup": {
-                                        "id": "[parameters('networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid')]"
-                                    },
-                                    "dnsSettings": {
-                                        "dnsServers": []
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    "diagnosticsProfile": {
-                        "bootDiagnostics": {
-                            "enabled": true
-                        }
-                    },
-                    "extensionProfile": {
-                        "extensions": []
-                    },
-                    "securityProfile": {
-                        "uefiSettings": {
-                            "secureBootEnabled": true,
-                            "vTpmEnabled": true
-                        },
-                        "securityType": "TrustedLaunch"
-                    }
+                "virtualMachineScaleSet": {
+                    "id": "[parameters('virtualMachineScaleSets_VM_group_externalid')]"
                 },
                 "additionalCapabilities": {
                     "hibernationEnabled": false
                 },
-                "zoneBalance": false,
-                "platformFaultDomainCount": 1,
-                "constrainedMaximumCapacity": false
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "canonical",
+                        "offer": "ubuntu-24_04-lts",
+                        "sku": "server",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_VM_group_93ae4b66_name'), '_OsDisk_1_bfec9c5ce4084e0e86d54f99b782b9f3')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "id": "[parameters('disks_VM_group_93ae4b66_OsDisk_1_bfec9c5ce4084e0e86d54f99b782b9f3_externalid')]"
+                        },
+                        "deleteOption": "Delete"
+                    },
+                    "dataDisks": [],
+                    "diskControllerType": "SCSI"
+                },
+                "osProfile": {
+                    "computerName": "vm-groupsU1YX0A",
+                    "adminUsername": "coursCloud",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/coursCloud/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClAXh5lKVUtKhUcY5qID222s76EP469+n6MtGjDMmOEC7iQnznprdnPxNua2s3M+HUhgs6FZt8MQXtRFpmgR2XFMPXVf2neDXFRCqpYaxYQ4EnlYxSxTx+BiUICPlCcyZgwuAxj3pZIoO8XN/FzEmAiD41Z5az9ewxNA09sxJEXtl+BypFkrr8weXZxXXemXoSFR7hz7ciCnaKYIRYhXA/LpFK8rkHd8ByEwiz3Jnf31sbRGv6GggdRsp3gGCgdmBaqrMkCu1nLh1hP+1jubks+MbV/On/MFnDj1CMr11s1juNh5+3Q7ylVlGbx5rtmQwgmTks2KHgKLKA7WRcMFOuqlOshmmMTxlXjDFZ9FLuxcPOoZiRk0dxaaSYCKdzZg8kwgmwAr7PCUgrl1u4PBi2ByYE8XEOsq+ZY4hc7NYB2C+0wevFgqNCN7bU+Gn6qfLTxlNkCwa8O+NZje4pDriN0irLX25v6rOLdlMLQPAnfeUH7lFX+JG0aKeYZj4DHpU= generated-by-azure"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        }
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "securityProfile": {
+                    "uefiSettings": {
+                        "secureBootEnabled": true,
+                        "vTpmEnabled": true
+                    },
+                    "securityType": "TrustedLaunch"
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_VM1_vnet_nic01_f404804e_externalid')]",
+                            "properties": {
+                                "primary": true,
+                                "deleteOption": "Delete"
+                            }
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
             }
         }
     ]
