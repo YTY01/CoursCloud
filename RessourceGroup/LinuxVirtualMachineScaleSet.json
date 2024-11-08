@@ -16,6 +16,12 @@
         "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
             "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
             "type": "String"
+        },
+        "adminPassSecret": {
+            "type": "securestring"
+        },
+        "secret1Secret": {
+            "type": "securestring"
         }
     },
     "variables": {},
@@ -50,6 +56,7 @@
                     "osProfile": {
                         "computerNamePrefix": "vm-groups",
                         "adminUsername": "coursCloud",
+                        "adminPassword": "[parameters('adminPassSecret')]",
                         "linuxConfiguration": {
                             "disablePasswordAuthentication": true,
                             "ssh": {
@@ -66,7 +73,18 @@
                                 "assessmentMode": "ImageDefault"
                             }
                         },
-                        "secrets": [],
+                        "secrets": [
+                            {
+                                "sourceVault": {
+                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
+                                },
+                                "vaultCertificates": [
+                                    {
+                                        "certificateUrl": "[parameters('secret1Secret')]"
+                                    }
+                                ]
+                            }
+                        ],
                         "allowExtensionOperations": true,
                         "requireGuestProvisionSignal": true
                     },
@@ -162,30 +180,6 @@
                 "platformFaultDomainCount": 1,
                 "constrainedMaximumCapacity": false
             }
-        },
-        {
-            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
-            "apiVersion": "2024-07-01",
-            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_93ae4b66')]",
-            "location": "eastus",
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
-            ],
-            "zones": [
-                "1"
-            ]
-        },
-        {
-            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
-            "apiVersion": "2024-07-01",
-            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_f3c1fee3')]",
-            "location": "eastus",
-            "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
-            ],
-            "zones": [
-                "2"
-            ]
         }
     ]
 }
