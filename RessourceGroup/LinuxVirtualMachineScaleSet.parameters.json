@@ -4,12 +4,5 @@
   "parameters": {
     "virtualMachineScaleSets_VM_group_name": {
       "value": "VM-group"
-    },
-    "adminPassSecret": {
-      "value": null
-    },
-    "secret1Secret": {
-      "value": null
-    }
   }
 }
