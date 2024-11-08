@@ -78,15 +78,15 @@
                         "secrets": [
                             {
                                 "sourceVault": {
-                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
+                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/[parameters('vaults_KeyVault_CoursCloud_name')]"
                                 },
-                                "secretUrl": "[reference('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud/secrets/AdminPass', '2019-09-01').value]"
+                                "secretUrl": "[reference(concat('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/', parameters('vaults_KeyVault_CoursCloud_name'), '/secrets/AdminPass'), '2019-09-01').value]"
                             },
                             {
                                 "sourceVault": {
-                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
+                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/[parameters('vaults_KeyVault_CoursCloud_name')]"
                                 },
-                                "secretUrl": "[reference('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud/secrets/Secret1', '2019-09-01').value]"
+                                "secretUrl": "[reference(concat('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/', parameters('vaults_KeyVault_CoursCloud_name'), '/secrets/Secret1'), '2019-09-01').value]"
                             }
                         ],
                         "allowExtensionOperations": true,
