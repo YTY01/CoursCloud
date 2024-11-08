@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineScaleSets_VM_group_name": {
@@ -15,10 +15,20 @@
       "value": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01"
     },
     "adminPassSecret": {
-      "value": null
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
+        },
+        "secretName": "AdminPass"
+      }
     },
     "secret1Secret": {
-      "value": null
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
+        },
+        "secretName": "Secret1"
+      }
     }
   }
 }
