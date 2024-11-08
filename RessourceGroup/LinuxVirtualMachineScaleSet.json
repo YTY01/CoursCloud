@@ -25,7 +25,6 @@
             "type": "String"
         }
     },
-    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets",
