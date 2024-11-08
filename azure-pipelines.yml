@@ -36,7 +36,7 @@ steps:
   inputs:
     azureSubscription: 'Azure subscription 1(188533e8-ed54-47d2-857a-0620ebdeb029)'
     KeyVaultName: 'KeyVault-CoursCloud'
-    SecretsFilter: 'AdminPass'
+    SecretsFilter: 'AdminPass,Secret1'
     RunAsPreJob: false
 
 - task: PowerShell@2
