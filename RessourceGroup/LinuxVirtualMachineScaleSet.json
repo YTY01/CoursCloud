@@ -17,22 +17,6 @@
         "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
             "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
             "type": "String"
-        },
-        "adminPassSecret": {
-            "reference": {
-                "keyVault": {
-                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
-                },
-                "secretName": "AdminPass"
-            }
-        },
-        "secret1Secret": {
-            "reference": {
-                "keyVault": {
-                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
-                },
-                "secretName": "Secret1"
-            }
         }
     },
     "variables": {},
@@ -88,13 +72,13 @@
                                 "sourceVault": {
                                     "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
                                 },
-                                "secretUrl": "[reference('adminPassSecret').value]"
+                                "secretUrl": "[reference('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud/secrets/AdminPass', '2019-09-01').value]"
                             },
                             {
                                 "sourceVault": {
                                     "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
                                 },
-                                "secretUrl": "[reference('secret1Secret').value]"
+                                "secretUrl": "[reference('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud/secrets/Secret1', '2019-09-01').value]"
                             }
                         ],
                         "allowExtensionOperations": true,
