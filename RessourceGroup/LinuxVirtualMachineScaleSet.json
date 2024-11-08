@@ -2,128 +2,191 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualMachines_VM_group_93ae4b66_name": {
-            "defaultValue": "VM-group_93ae4b66",
+        "virtualMachineScaleSets_VM_group_name": {
+            "defaultValue": "VM-group",
             "type": "String"
         },
-        "virtualMachineScaleSets_VM_group_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Compute/virtualMachineScaleSets/VM-group",
+        "virtualNetworks_VM1_vnet_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet",
             "type": "String"
         },
-        "disks_VM_group_93ae4b66_OsDisk_1_bfec9c5ce4084e0e86d54f99b782b9f3_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Compute/disks/VM-group_93ae4b66_OsDisk_1_bfec9c5ce4084e0e86d54f99b782b9f3",
+        "loadBalancers_LoadBalancer_Devoir1_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/loadBalancers/LoadBalancer_Devoir1",
             "type": "String"
         },
-        "networkInterfaces_VM1_vnet_nic01_f404804e_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkInterfaces/VM1-vnet-nic01-f404804e",
+        "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
             "type": "String"
-        },
-        "adminPassSecret": {
-            "type": "string"
-        },
-        "secret1Secret": {
-            "type": "string"
-        },
-        "keyVaultResourceId": {
-            "type": "string"
         }
     },
     "variables": {},
     "resources": [
         {
-            "type": "Microsoft.Compute/virtualMachines",
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
             "apiVersion": "2024-07-01",
-            "name": "[parameters('virtualMachines_VM_group_93ae4b66_name')]",
+            "name": "[parameters('virtualMachineScaleSets_VM_group_name')]",
             "location": "eastus",
-            "tags": {
-                "VirtualMachineProfileTimeCreated": "11/5/2024 12:51:55 AM +00:00"
+            "sku": {
+                "name": "Standard_DC1s_v2",
+                "tier": "Standard",
+                "capacity": 2
             },
             "zones": [
-                "1"
+                "1",
+                "2"
             ],
             "properties": {
-                "hardwareProfile": {
-                    "vmSize": "Standard_DC1s_v2"
+                "singlePlacementGroup": false,
+                "orchestrationMode": "Flexible",
+                "upgradePolicy": {
+                    "mode": "Manual"
                 },
-                "virtualMachineScaleSet": {
-                    "id": "[parameters('virtualMachineScaleSets_VM_group_externalid')]"
+                "scaleInPolicy": {
+                    "rules": [
+                        "Default"
+                    ],
+                    "forceDeletion": false
+                },
+                "virtualMachineProfile": {
+                    "osProfile": {
+                        "computerNamePrefix": "vm-groups",
+                        "adminUsername": "coursCloud",
+                        "linuxConfiguration": {
+                            "disablePasswordAuthentication": true,
+                            "ssh": {
+                                "publicKeys": [
+                                    {
+                                        "path": "/home/coursCloud/.ssh/authorized_keys",
+                                        "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClAXh5lKVUtKhUcY5qID222s76EP469+n6MtGjDMmOEC7iQnznprdnPxNua2s3M+HUhgs6FZt8MQXtRFpmgR2XFMPXVf2neDXFRCqpYaxYQ4EnlYxSxTx+BiUICPlCcyZgwuAxj3pZIoO8XN/FzEmAiD41Z5az9ewxNA09sxJEXtl+BypFkrr8weXZxXXemXoSFR7hz7ciCnaKYIRYhXA/LpFK8rkHd8ByEwiz3Jnf31sbRGv6GggdRsp3gGCgdmBaqrMkCu1nLh1hP+1jubks+MbV/On/MFnDj1CMr11s1juNh5+3Q7ylVlGbx5rtmQwgmTks2KHgKLKA7WRcMFOuqlOshmmMTxlXjDFZ9FLuxcPOoZiRk0dxaaSYCKdzZg8kwgmwAr7PCUgrl1u4PBi2ByYE8XEOsq+ZY4hc7NYB2C+0wevFgqNCN7bU+Gn6qfLTxlNkCwa8O+NZje4pDriN0irLX25v6rOLdlMLQPAnfeUH7lFX+JG0aKeYZj4DHpU= generated-by-azure"
+                                    }
+                                ]
+                            },
+                            "provisionVMAgent": true,
+                            "patchSettings": {
+                                "patchMode": "ImageDefault",
+                                "assessmentMode": "ImageDefault"
+                            }
+                        },
+                        "secrets": [],
+                        "allowExtensionOperations": true,
+                        "requireGuestProvisionSignal": true
+                    },
+                    "storageProfile": {
+                        "osDisk": {
+                            "osType": "Linux",
+                            "createOption": "FromImage",
+                            "caching": "ReadWrite",
+                            "managedDisk": {
+                                "storageAccountType": "Premium_LRS"
+                            },
+                            "deleteOption": "Delete",
+                            "diskSizeGB": 30
+                        },
+                        "imageReference": {
+                            "publisher": "canonical",
+                            "offer": "ubuntu-24_04-lts",
+                            "sku": "server",
+                            "version": "latest"
+                        },
+                        "diskControllerType": "SCSI"
+                    },
+                    "networkProfile": {
+                        "networkApiVersion": "2020-11-01",
+                        "networkInterfaceConfigurations": [
+                            {
+                                "name": "VM1-vnet-nic01",
+                                "properties": {
+                                    "primary": true,
+                                    "enableAcceleratedNetworking": false,
+                                    "disableTcpStateTracking": false,
+                                    "enableIPForwarding": false,
+                                    "auxiliaryMode": "None",
+                                    "auxiliarySku": "None",
+                                    "deleteOption": "Delete",
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "VM1-vnet-nic01-defaultIpConfiguration",
+                                            "properties": {
+                                                "privateIPAddressVersion": "IPv4",
+                                                "subnet": {
+                                                    "id": "[concat(parameters('virtualNetworks_VM1_vnet_externalid'), '/subnets/default')]"
+                                                },
+                                                "primary": true,
+                                                "publicIPAddressConfiguration": {
+                                                    "name": "publicIp-VM1-vnet-nic01",
+                                                    "properties": {
+                                                        "idleTimeoutInMinutes": 15,
+                                                        "ipTags": [],
+                                                        "publicIPAddressVersion": "IPv4"
+                                                    }
+                                                },
+                                                "applicationSecurityGroups": [],
+                                                "loadBalancerBackendAddressPools": [
+                                                    {
+                                                        "id": "[concat(parameters('loadBalancers_LoadBalancer_Devoir1_externalid'), '/backendAddressPools/BackEnd_Pool')]"
+                                                    }
+                                                ],
+                                                "applicationGatewayBackendAddressPools": []
+                                            }
+                                        }
+                                    ],
+                                    "networkSecurityGroup": {
+                                        "id": "[parameters('networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid')]"
+                                    },
+                                    "dnsSettings": {
+                                        "dnsServers": []
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "diagnosticsProfile": {
+                        "bootDiagnostics": {
+                            "enabled": true
+                        }
+                    },
+                    "extensionProfile": {
+                        "extensions": []
+                    },
+                    "securityProfile": {
+                        "uefiSettings": {
+                            "secureBootEnabled": true,
+                            "vTpmEnabled": true
+                        },
+                        "securityType": "TrustedLaunch"
+                    }
                 },
                 "additionalCapabilities": {
                     "hibernationEnabled": false
                 },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "canonical",
-                        "offer": "ubuntu-24_04-lts",
-                        "sku": "server",
-                        "version": "latest"
-                    },
-                    "osDisk": {
-                        "osType": "Linux",
-                        "name": "[concat(parameters('virtualMachines_VM_group_93ae4b66_name'), '_OsDisk_1_bfec9c5ce4084e0e86d54f99b782b9f3')]",
-                        "createOption": "FromImage",
-                        "caching": "ReadWrite",
-                        "managedDisk": {
-                            "id": "[parameters('disks_VM_group_93ae4b66_OsDisk_1_bfec9c5ce4084e0e86d54f99b782b9f3_externalid')]"
-                        },
-                        "deleteOption": "Delete"
-                    },
-                    "dataDisks": [],
-                    "diskControllerType": "SCSI"
-                },
-                "osProfile": {
-                    "computerName": "vm-groupsU1YX0A",
-                    "adminUsername": "coursCloud",
-                    "linuxConfiguration": {
-                        "disablePasswordAuthentication": false,
-                        "provisionVMAgent": true,
-                        "patchSettings": {
-                            "patchMode": "ImageDefault",
-                            "assessmentMode": "ImageDefault"
-                        }
-                    },
-                    "secrets": [
-                        {
-                            "sourceVault": {
-                                "id": "[parameters('keyVaultResourceId')]"
-                            },
-                            "vaultSecrets": [
-                                {
-                                    "secretUrl": "[parameters('adminPassSecret')]"
-                                },
-                                {
-                                    "secretUrl": "[parameters('secret1Secret')]"
-                                }
-                            ]
-                        }
-                    ],
-                    "allowExtensionOperations": true,
-                    "requireGuestProvisionSignal": true
-                },
-                "securityProfile": {
-                    "uefiSettings": {
-                        "secureBootEnabled": true,
-                        "vTpmEnabled": true
-                    },
-                    "securityType": "TrustedLaunch"
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[parameters('networkInterfaces_VM1_vnet_nic01_f404804e_externalid')]",
-                            "properties": {
-                                "primary": true,
-                                "deleteOption": "Delete"
-                            }
-                        }
-                    ]
-                },
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": true
-                    }
-                }
+                "zoneBalance": false,
+                "platformFaultDomainCount": 1,
+                "constrainedMaximumCapacity": false
             }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_93ae4b66')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+            ],
+            "zones": [
+                "1"
+            ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_f3c1fee3')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+            ],
+            "zones": [
+                "2"
+            ]
         }
     ]
 }
