@@ -4,6 +4,18 @@
   "parameters": {
     "virtualMachineScaleSets_VM_group_name": {
       "value": "VM-group"
-    }
+    },
+    "virtualNetworks_VM1_vnet_externalid": {
+      "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet",
+      "type": "String"
+    },
+    "loadBalancers_LoadBalancer_Devoir1_externalid": {
+      "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/loadBalancers/LoadBalancer_Devoir1",
+      "type": "String"
+    },
+    "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
+      "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
+      "type": "String"
+    },
   }
 }
