@@ -4,5 +4,6 @@
   "parameters": {
     "virtualMachineScaleSets_VM_group_name": {
       "value": "VM-group"
+    }
   }
 }
