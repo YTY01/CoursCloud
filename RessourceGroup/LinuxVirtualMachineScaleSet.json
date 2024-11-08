@@ -1,539 +1,192 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "vmSize": {
-      "type": "string",
-      "defaultValue": "Standard_A1",
-      "minLength": "1"
-    },
-    "ubuntuOSVersion": {
-      "type": "string",
-      "defaultValue": "14.04.4-LTS",
-      "allowedValues": [
-        "15.10",
-        "14.04.4-LTS"
-      ],
-      "metadata": {
-        "description": "The Ubuntu version for the VM. This will pick a fully patched image of this given Ubuntu version. Allowed values are: 15.10, 14.04.4-LTS."
-      }
-    },
-    "vmssName": {
-      "type": "string",
-      "metadata": {
-        "description": "DNS name used for public IP addresses and as base for naming other resources. Must be globally unique and 3 to 61 characters long."
-      },
-      "minLength": "3",
-      "maxLength": "61"
-    },
-    "instanceCount": {
-      "type": "int",
-      "metadata": {
-        "description": "Number of VM instances (100 or less)"
-      },
-      "minValue": "1",
-      "maxValue": "100"
-    },
-    "adminUsername": {
-      "type": "string",
-      "minLength": "1",
-      "metadata": {
-        "description": "Administrator username on all VMs"
-      }
-    },
-    "adminPassword": {
-      "type": "securestring",
-      "metadata": {
-        "description": "Administrator password on all VMs"
-      }
-    },
-    "customData": {
-      "type": "string",
-      "metadata": {
-        "description": "Custom Data"
-      }
-    }
-  },
-  "variables": {
-    "location": "[resourceGroup().location]",
-    "storageAccountType": "Standard_LRS",
-    "namingInfix": "[toLower(substring(concat(parameters('vmssName'), uniqueString(resourceGroup().id)), 0, 9))]",
-    "longNamingInfix": "[toLower(parameters('vmssName'))]",
-    "newStorageAccountSuffix": "[concat(variables('namingInfix'), 'sa')]",
-    "uniqueStringArray": [
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '0')), variables('newStorageAccountSuffix'))]",
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '1')), variables('newStorageAccountSuffix'))]",
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '2')), variables('newStorageAccountSuffix'))]",
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '3')), variables('newStorageAccountSuffix'))]",
-      "[concat(uniqueString(concat(resourceGroup().id, variables('newStorageAccountSuffix'), '4')), variables('newStorageAccountSuffix'))]"
-    ],
-    "vhdContainerName": "[concat(variables('namingInfix'), 'vhd')]",
-    "osDiskName": "[concat(variables('namingInfix'), 'osdisk')]",
-    "addressPrefix": "10.0.0.0/16",
-    "subnetPrefix": "10.0.0.0/24",
-    "virtualNetworkName": "[concat(variables('namingInfix'), 'vnet')]",
-    "publicIPAddressName": "[concat(variables('namingInfix'), 'pip')]",
-    "subnetName": "[concat(variables('namingInfix'), 'subnet')]",
-    "loadBalancerName": "[concat(variables('namingInfix'), 'lb')]",
-    "publicIPAddressID": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]",
-    "lbID": "[resourceId('Microsoft.Network/loadBalancers', variables('loadBalancerName'))]",
-    "natPoolName": "[concat(variables('namingInfix'), 'natpool')]",
-    "bePoolName": "[concat(variables('namingInfix'), 'bepool')]",
-    "nicName": "[concat(variables('namingInfix'), 'nic')]",
-    "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
-    "frontEndIPConfigID": "[concat(variables('lbID'), '/frontendIPConfigurations/loadBalancerFrontEnd')]",
-    "osType": {
-      "publisher": "Canonical",
-      "offer": "UbuntuServer",
-      "sku": "[parameters('ubuntuOSVersion')]",
-      "version": "latest"
-    },
-    "imageReference": "[variables('osType')]",
-    "diagnosticsStorageAccountName": "[variables('uniqueStringArray')[0]]",
-    "ladMetricsResourceId": "[resourceId('Microsoft.Compute/virtualMachineScaleSets', variables('namingInfix'))]"
-  },
-  "resources": [
-    {
-      "type": "Microsoft.Network/virtualNetworks",
-      "name": "[variables('virtualNetworkName')]",
-      "location": "[variables('location')]",
-      "apiVersion": "2016-03-30",
-      "tags": {
-        "displayName": "VirtualNetwork"
-      },
-      "properties": {
-        "addressSpace": {
-          "addressPrefixes": [
-            "[variables('addressPrefix')]"
-          ]
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineScaleSets_VM_group_name": {
+            "defaultValue": "VM-group",
+            "type": "String"
         },
-        "subnets": [
-          {
-            "name": "[variables('subnetName')]",
-            "properties": {
-              "addressPrefix": "[variables('subnetPrefix')]"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('uniqueStringArray')[copyIndex()]]",
-      "location": "[variables('location')]",
-      "apiVersion": "2016-01-01",
-      "tags": {
-        "displayName": "StorageAccounts"
-      },
-      "copy": {
-        "name": "storageLoop",
-        "count": "[length(variables('uniqueStringArray'))]"
-      },
-      "sku": {
-        "name": "[variables('storageAccountType')]"
-      },
-      "kind": "Storage"
-    },
-    {
-      "type": "Microsoft.Network/publicIPAddresses",
-      "name": "[variables('publicIPAddressName')]",
-      "location": "[variables('location')]",
-      "apiVersion": "2016-03-30",
-      "tags": {
-        "displayName": "PublicIP"
-      },
-      "properties": {
-        "publicIPAllocationMethod": "Dynamic",
-        "dnsSettings": {
-          "domainNameLabel": "[variables('longNamingInfix')]"
+        "virtualNetworks_VM1_vnet_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet",
+            "type": "String"
+        },
+        "loadBalancers_LoadBalancer_Devoir1_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/loadBalancers/LoadBalancer_Devoir1",
+            "type": "String"
+        },
+        "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
+            "type": "String"
         }
-      }
     },
-    {
-      "type": "Microsoft.Network/loadBalancers",
-      "name": "[variables('loadBalancerName')]",
-      "location": "[variables('location')]",
-      "apiVersion": "2016-03-30",
-      "tags": {
-        "displayName": "LoadBalancer"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
-      ],
-      "properties": {
-        "frontendIPConfigurations": [
-          {
-            "name": "LoadBalancerFrontEnd",
-            "properties": {
-              "publicIPAddress": {
-                "id": "[variables('publicIPAddressID')]"
-              }
-            }
-          }
-        ],
-        "backendAddressPools": [
-          {
-            "name": "[variables('bePoolName')]"
-          }
-        ],
-        "inboundNatPools": [
-          {
-            "name": "[variables('natPoolName')]",
-            "properties": {
-              "frontendIPConfiguration": {
-                "id": "[variables('frontEndIPConfigID')]"
-              },
-              "protocol": "tcp",
-              "frontendPortRangeStart": "50000",
-              "frontendPortRangeEnd": "50099",
-              "backendPort": "22"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "type": "Microsoft.Compute/virtualMachineScaleSets",
-      "name": "[variables('namingInfix')]",
-      "location": "[variables('location')]",
-      "apiVersion": "2016-03-30",
-      "tags": {
-        "displayName": "VMScaleSet"
-      },
-      "dependsOn": [
-        "storageLoop",
-        "[variables('lbID')]",
-        "[resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]"
-      ],
-      "sku": {
-        "name": "[parameters('vmSize')]",
-        "tier": "Standard",
-        "capacity": "[parameters('instanceCount')]"
-      },
-      "properties": {
-        "overprovision": "true",
-        "upgradePolicy": {
-          "mode": "Manual"
-        },
-        "virtualMachineProfile": {
-          "storageProfile": {
-            "osDisk": {
-              "vhdContainers": [
-                "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('uniqueStringArray')[0]), '2016-01-01').primaryEndpoints.blob, variables('vhdContainerName'))]",
-                "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('uniqueStringArray')[1]), '2016-01-01').primaryEndpoints.blob, variables('vhdContainerName'))]",
-                "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('uniqueStringArray')[2]), '2016-01-01').primaryEndpoints.blob, variables('vhdContainerName'))]",
-                "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('uniqueStringArray')[3]), '2016-01-01').primaryEndpoints.blob, variables('vhdContainerName'))]",
-                "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('uniqueStringArray')[4]), '2016-01-01').primaryEndpoints.blob, variables('vhdContainerName'))]"
-              ],
-              "name": "[variables('osDiskName')]",
-              "caching": "ReadOnly",
-              "createOption": "FromImage"
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "apiVersion": "2024-07-01",
+            "name": "[parameters('virtualMachineScaleSets_VM_group_name')]",
+            "location": "eastus",
+            "sku": {
+                "name": "Standard_DC1s_v2",
+                "tier": "Standard",
+                "capacity": 2
             },
-            "imageReference": "[variables('imageReference')]"
-          },
-          "osProfile": {
-            "computerNamePrefix": "[variables('namingInfix')]",
-            "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('adminPassword')]"
-          },
-          "networkProfile": {
-            "networkInterfaceConfigurations": [
-              {
-                "name": "[variables('nicName')]",
-                "properties": {
-                  "primary": true,
-                  "ipConfigurations": [
-                    {
-                      "name": "[variables('ipConfigName')]",
-                      "properties": {
-                        "subnet": {
-                          "id": "[concat(resourceId('Microsoft.Network/virtualNetworks', variables('virtualNetworkName')), '/subnets/', variables('subnetName'))]"
+            "zones": [
+                "1",
+                "2"
+            ],
+            "properties": {
+                "singlePlacementGroup": false,
+                "orchestrationMode": "Flexible",
+                "upgradePolicy": {
+                    "mode": "Manual"
+                },
+                "scaleInPolicy": {
+                    "rules": [
+                        "Default"
+                    ],
+                    "forceDeletion": false
+                },
+                "virtualMachineProfile": {
+                    "osProfile": {
+                        "computerNamePrefix": "vm-groups",
+                        "adminUsername": "coursCloud",
+                        "linuxConfiguration": {
+                            "disablePasswordAuthentication": true,
+                            "ssh": {
+                                "publicKeys": [
+                                    {
+                                        "path": "/home/coursCloud/.ssh/authorized_keys",
+                                        "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClAXh5lKVUtKhUcY5qID222s76EP469+n6MtGjDMmOEC7iQnznprdnPxNua2s3M+HUhgs6FZt8MQXtRFpmgR2XFMPXVf2neDXFRCqpYaxYQ4EnlYxSxTx+BiUICPlCcyZgwuAxj3pZIoO8XN/FzEmAiD41Z5az9ewxNA09sxJEXtl+BypFkrr8weXZxXXemXoSFR7hz7ciCnaKYIRYhXA/LpFK8rkHd8ByEwiz3Jnf31sbRGv6GggdRsp3gGCgdmBaqrMkCu1nLh1hP+1jubks+MbV/On/MFnDj1CMr11s1juNh5+3Q7ylVlGbx5rtmQwgmTks2KHgKLKA7WRcMFOuqlOshmmMTxlXjDFZ9FLuxcPOoZiRk0dxaaSYCKdzZg8kwgmwAr7PCUgrl1u4PBi2ByYE8XEOsq+ZY4hc7NYB2C+0wevFgqNCN7bU+Gn6qfLTxlNkCwa8O+NZje4pDriN0irLX25v6rOLdlMLQPAnfeUH7lFX+JG0aKeYZj4DHpU= generated-by-azure"
+                                    }
+                                ]
+                            },
+                            "provisionVMAgent": true,
+                            "patchSettings": {
+                                "patchMode": "ImageDefault",
+                                "assessmentMode": "ImageDefault"
+                            }
                         },
-                        "loadBalancerBackendAddressPools": [
-                          {
-                            "id": "[concat(variables('lbID'), '/backendAddressPools/', variables('bePoolName'))]"
-                          }
-                        ],
-                        "loadBalancerInboundNatPools": [
-                          {
-                            "id": "[concat(variables('lbID'), '/inboundNatPools/', variables('natPoolName'))]"
-                          }
+                        "secrets": [],
+                        "allowExtensionOperations": true,
+                        "requireGuestProvisionSignal": true
+                    },
+                    "storageProfile": {
+                        "osDisk": {
+                            "osType": "Linux",
+                            "createOption": "FromImage",
+                            "caching": "ReadWrite",
+                            "managedDisk": {
+                                "storageAccountType": "Premium_LRS"
+                            },
+                            "deleteOption": "Delete",
+                            "diskSizeGB": 30
+                        },
+                        "imageReference": {
+                            "publisher": "canonical",
+                            "offer": "ubuntu-24_04-lts",
+                            "sku": "server",
+                            "version": "latest"
+                        },
+                        "diskControllerType": "SCSI"
+                    },
+                    "networkProfile": {
+                        "networkApiVersion": "2020-11-01",
+                        "networkInterfaceConfigurations": [
+                            {
+                                "name": "VM1-vnet-nic01",
+                                "properties": {
+                                    "primary": true,
+                                    "enableAcceleratedNetworking": false,
+                                    "disableTcpStateTracking": false,
+                                    "enableIPForwarding": false,
+                                    "auxiliaryMode": "None",
+                                    "auxiliarySku": "None",
+                                    "deleteOption": "Delete",
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "VM1-vnet-nic01-defaultIpConfiguration",
+                                            "properties": {
+                                                "privateIPAddressVersion": "IPv4",
+                                                "subnet": {
+                                                    "id": "[concat(parameters('virtualNetworks_VM1_vnet_externalid'), '/subnets/default')]"
+                                                },
+                                                "primary": true,
+                                                "publicIPAddressConfiguration": {
+                                                    "name": "publicIp-VM1-vnet-nic01",
+                                                    "properties": {
+                                                        "idleTimeoutInMinutes": 15,
+                                                        "ipTags": [],
+                                                        "publicIPAddressVersion": "IPv4"
+                                                    }
+                                                },
+                                                "applicationSecurityGroups": [],
+                                                "loadBalancerBackendAddressPools": [
+                                                    {
+                                                        "id": "[concat(parameters('loadBalancers_LoadBalancer_Devoir1_externalid'), '/backendAddressPools/BackEnd_Pool')]"
+                                                    }
+                                                ],
+                                                "applicationGatewayBackendAddressPools": []
+                                            }
+                                        }
+                                    ],
+                                    "networkSecurityGroup": {
+                                        "id": "[parameters('networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid')]"
+                                    },
+                                    "dnsSettings": {
+                                        "dnsServers": []
+                                    }
+                                }
+                            }
                         ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          "extensionProfile": {
-            "extensions": [
-              {
-                "name": "AzureDiagnostics",
-                "properties": {
-                  "publisher": "Microsoft.OSTCExtensions",
-                  "type": "LinuxDiagnostic",
-                  "typeHandlerVersion": "2.3",
-                  "autoUpgradeMinorVersion": true,
-                  "settings": {
-                    "ladCfg": {
-                      "diagnosticMonitorConfiguration": {
-                        "performanceCounters": {
-                          "performanceCounterConfiguration": [
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "AvailableMemory",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "PercentAvailableMemory",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "UsedMemory",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "PercentUsedMemory",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "PercentUsedByCache",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "PagesPerSec",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "PagesReadPerSec",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "PagesWrittenPerSec",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "AvailableSwap",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "PercentAvailableSwap",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "UsedSwap",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Memory",
-                              "counterSpecifier": "PercentUsedSwap",
-                              "table": "LinuxMemory"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Processor",
-                              "counterSpecifier": "PercentIdleTime",
-                              "table": "LinuxProcessor"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Processor",
-                              "counterSpecifier": "PercentUserTime",
-                              "table": "LinuxProcessor"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Processor",
-                              "counterSpecifier": "PercentNiceTime",
-                              "table": "LinuxProcessor"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Processor",
-                              "counterSpecifier": "PercentPrivilegedTime",
-                              "table": "LinuxProcessor"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Processor",
-                              "counterSpecifier": "PercentInterruptTime",
-                              "table": "LinuxProcessor"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Processor",
-                              "counterSpecifier": "PercentDPCTime",
-                              "table": "LinuxProcessor"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Processor",
-                              "counterSpecifier": "PercentProcessorTime",
-                              "table": "LinuxProcessor"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "Processor",
-                              "counterSpecifier": "PercentIOWaitTime",
-                              "table": "LinuxProcessor"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "BytesPerSecond",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "ReadBytesPerSecond",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "WriteBytesPerSecond",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "TransfersPerSecond",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "ReadsPerSecond",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "WritesPerSecond",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "AverageReadTime",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "AverageWriteTime",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "AverageTransferTime",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "PhysicalDisk",
-                              "counterSpecifier": "AverageDiskQueueLength",
-                              "table": "LinuxPhysicalDisk"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "NetworkInterface",
-                              "counterSpecifier": "BytesTransmitted",
-                              "table": "LinuxNetworkInterface"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "NetworkInterface",
-                              "counterSpecifier": "BytesReceived",
-                              "table": "LinuxNetworkInterface"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "NetworkInterface",
-                              "counterSpecifier": "PacketsTransmitted",
-                              "table": "LinuxNetworkInterface"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "NetworkInterface",
-                              "counterSpecifier": "PacketsReceived",
-                              "table": "LinuxNetworkInterface"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "NetworkInterface",
-                              "counterSpecifier": "BytesTotal",
-                              "table": "LinuxNetworkInterface"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "NetworkInterface",
-                              "counterSpecifier": "TotalRxErrors",
-                              "table": "LinuxNetworkInterface"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "NetworkInterface",
-                              "counterSpecifier": "TotalTxErrors",
-                              "table": "LinuxNetworkInterface"
-                            },
-                            {
-                              "namespace": "root/scx",
-                              "class": "NetworkInterface",
-                              "counterSpecifier": "TotalCollisions",
-                              "table": "LinuxNetworkInterface"
-                            }
-                          ]
-                        },
-                        "metrics": {
-                          "resourceId": "[variables('ladMetricsResourceId')]",
-                          "metricAggregation": [
-                            {
-                              "scheduledTransferPeriod": "PT1H"
-                            },
-                            {
-                              "scheduledTransferPeriod": "PT1M"
-                            }
-                          ]
+                    },
+                    "diagnosticsProfile": {
+                        "bootDiagnostics": {
+                            "enabled": true
                         }
-                      }
+                    },
+                    "extensionProfile": {
+                        "extensions": []
+                    },
+                    "securityProfile": {
+                        "uefiSettings": {
+                            "secureBootEnabled": true,
+                            "vTpmEnabled": true
+                        },
+                        "securityType": "TrustedLaunch"
                     }
-                  },
-                  "protectedSettings": {
-                    "storageAccountName": "[variables('diagnosticsStorageAccountName')]",
-                    "storageAccountKey": "[listkeys(resourceId('Microsoft.Storage/storageAccounts', variables('diagnosticsStorageAccountName')), '2016-01-01').keys[0].value]"
-                  }
-                }
-              }
+                },
+                "additionalCapabilities": {
+                    "hibernationEnabled": false
+                },
+                "zoneBalance": false,
+                "platformFaultDomainCount": 1,
+                "constrainedMaximumCapacity": false
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_93ae4b66')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+            ],
+            "zones": [
+                "1"
             ]
-          }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_f3c1fee3')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+            ],
+            "zones": [
+                "2"
+            ]
         }
-      }
-    }
-  ]
+    ]
 }
