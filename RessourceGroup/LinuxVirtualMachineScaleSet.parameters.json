@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "virtualMachineScaleSets_VM_group_name": {
-      "value": "VM-group",
+      "value": "VM-group"
     },
     "adminPassSecret": {
       "value": null
