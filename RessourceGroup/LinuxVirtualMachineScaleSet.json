@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "virtualMachineScaleSets_VM_group_name": {
-            "defaultValue": "VM-group",
+            "value": "VM-group",
             "type": "String"
         },
         "virtualNetworks_VM1_vnet_externalid": {
