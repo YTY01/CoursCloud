@@ -1,34 +1,18 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "virtualMachineScaleSets_VM_group_name": {
-      "value": "VM-group"
-    },
-    "virtualNetworks_VM1_vnet_externalid": {
-      "value": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet"
-    },
-    "loadBalancers_LoadBalancer_Devoir1_externalid": {
-      "value": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/loadBalancers/LoadBalancer_Devoir1"
-    },
-    "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
-      "value": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01"
-    },
-    "adminPassSecret": {
-      "reference": {
-        "keyVault": {
-          "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "virtualMachineScaleSets_VM_group_name": {
+            "value": "VM-group"
         },
-        "secretName": "AdminPass"
-      }
-    },
-    "secret1Secret": {
-      "reference": {
-        "keyVault": {
-          "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.KeyVault/vaults/KeyVault_CoursCloud"
+        "virtualNetworks_VM1_vnet_externalid": {
+            "value": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet"
         },
-        "secretName": "Secret1"
-      }
+        "loadBalancers_LoadBalancer_Devoir1_externalid": {
+            "value": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/loadBalancers/LoadBalancer_Devoir1"
+        },
+        "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
+            "value": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01"
+        }
     }
-  }
 }
