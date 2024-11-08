@@ -5,6 +5,12 @@
         "virtualMachineScaleSets_VM_group_name": {
             "type": "String"
         },
+        "adminPassSecret": {
+          "type": "String"
+        },
+        "secret1Secret": {
+          "type": "String"
+        },
         "virtualNetworks_VM1_vnet_externalid": {
             "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet",
             "type": "String"
