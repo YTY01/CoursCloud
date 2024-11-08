@@ -63,5 +63,5 @@ steps:
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/RessourceGroup/LinuxVirtualMachineScaleSet.json'
     csmParametersFile: '$(Build.SourcesDirectory)/RessourceGroup/LinuxVirtualMachineScaleSet.parameters.json'
-    overrideParameters: '-customData $(CloudInitContent) -adminPassword $(AdminPass)'
+    overrideParameters: '-adminPassSecret $(adminPassSecret) -secret1Secret $(secret1Secret)'
     deploymentMode: 'Incremental'
