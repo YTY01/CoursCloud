@@ -10,15 +10,12 @@
             "type": "String"
         },
         "virtualNetworks_VM1_vnet_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet",
             "type": "String"
         },
         "loadBalancers_LoadBalancer_Devoir1_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/loadBalancers/LoadBalancer_Devoir1",
             "type": "String"
         },
         "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
-            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
             "type": "String"
         },
         "adminPassSecret": {
@@ -49,16 +46,11 @@
                 "upgradePolicy": {
                     "mode": "Manual"
                 },
-                "scaleInPolicy": {
-                    "rules": [
-                        "Default"
-                    ],
-                    "forceDeletion": false
-                },
                 "virtualMachineProfile": {
                     "osProfile": {
                         "computerNamePrefix": "vm-groups",
                         "adminUsername": "coursCloud",
+                        "adminPassword": "[reference(concat('https://', parameters('vaults_KeyVault_CoursCloud_name'), '.vault.azure.net/secrets/', parameters('adminPassSecret')), '2024-04-01').value]",
                         "linuxConfiguration": {
                             "disablePasswordAuthentication": true,
                             "ssh": {
@@ -74,23 +66,7 @@
                                 "patchMode": "ImageDefault",
                                 "assessmentMode": "ImageDefault"
                             }
-                        },
-                        "secrets": [
-                            {
-                                "sourceVault": {
-                                    "id": "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_KeyVault_CoursCloud_name'))]"
-                                },
-                                "secretUri": "[reference(concat('https://', parameters('vaults_KeyVault_CoursCloud_name'), '.vault.azure.net/secrets/AdminPass'), '2019-09-01').value]"
-                            },
-                            {
-                                "sourceVault": {
-                                    "id": "[resourceId('Microsoft.KeyVault/vaults', parameters('vaults_KeyVault_CoursCloud_name'))]"
-                                },
-                                "secretUri": "[reference(concat('https://', parameters('vaults_KeyVault_CoursCloud_name'), '.vault.azure.net/secrets/Secret1'), '2019-09-01').value]"
-                            }
-                        ],
-                        "allowExtensionOperations": true,
-                        "requireGuestProvisionSignal": true
+                        }
                     },
                     "storageProfile": {
                         "osDisk": {
@@ -112,18 +88,11 @@
                         "diskControllerType": "SCSI"
                     },
                     "networkProfile": {
-                        "networkApiVersion": "2020-11-01",
                         "networkInterfaceConfigurations": [
                             {
                                 "name": "VM1-vnet-nic01",
                                 "properties": {
                                     "primary": true,
-                                    "enableAcceleratedNetworking": false,
-                                    "disableTcpStateTracking": false,
-                                    "enableIPForwarding": false,
-                                    "auxiliaryMode": "None",
-                                    "auxiliarySku": "None",
-                                    "deleteOption": "Delete",
                                     "ipConfigurations": [
                                         {
                                             "name": "VM1-vnet-nic01-defaultIpConfiguration",
@@ -132,22 +101,7 @@
                                                 "subnet": {
                                                     "id": "[concat(parameters('virtualNetworks_VM1_vnet_externalid'), '/subnets/default')]"
                                                 },
-                                                "primary": true,
-                                                "publicIPAddressConfiguration": {
-                                                    "name": "publicIp-VM1-vnet-nic01",
-                                                    "properties": {
-                                                        "idleTimeoutInMinutes": 15,
-                                                        "ipTags": [],
-                                                        "publicIPAddressVersion": "IPv4"
-                                                    }
-                                                },
-                                                "applicationSecurityGroups": [],
-                                                "loadBalancerBackendAddressPools": [
-                                                    {
-                                                        "id": "[concat(parameters('loadBalancers_LoadBalancer_Devoir1_externalid'), '/backendAddressPools/BackEnd_Pool')]"
-                                                    }
-                                                ],
-                                                "applicationGatewayBackendAddressPools": []
+                                                "primary": true
                                             }
                                         }
                                     ],
