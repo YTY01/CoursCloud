@@ -18,10 +18,10 @@
             "value": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01"
         },
         "adminPassSecret": {
-            "value": "[parameters('adminPassSecret')]"
+            "value": null
         },
         "secret1Secret": {
-            "value": "[parameters('secret1Secret')]"
+            "value": null
     }
     }
 }
