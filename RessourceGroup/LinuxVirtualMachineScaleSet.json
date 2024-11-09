@@ -29,7 +29,7 @@
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets",
-            "apiVersion": "2021-03-01",
+            "apiVersion": "2024-07-01",
             "name": "[parameters('virtualMachineScaleSets_VM_devoir1_name')]",
             "location": "eastus",
             "sku": {
@@ -172,7 +172,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
-            "apiVersion": "2021-03-01",
+            "apiVersion": "2024-07-01",
             "name": "[concat(parameters('virtualMachineScaleSets_VM_devoir1_name'), '/', parameters('virtualMachineScaleSets_VM_devoir1_name'), '_7e07cd4d')]",
             "location": "eastus",
             "dependsOn": [
@@ -184,7 +184,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
-            "apiVersion": "2021-03-01",
+            "apiVersion": "2024-07-01",
             "name": "[concat(parameters('virtualMachineScaleSets_VM_devoir1_name'), '/', parameters('virtualMachineScaleSets_VM_devoir1_name'), '_e93cbfd8')]",
             "location": "eastus",
             "dependsOn": [
