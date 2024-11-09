@@ -73,7 +73,7 @@
                                 "assessmentMode": "ImageDefault"
                             }
                         },
-                        "secrets": [],
+                        "secrets": ["[concat(parameters('vaults_KeyVault_CoursCloud_name'), '/AdminPass')]","[concat(parameters('vaults_KeyVault_CoursCloud_name'), '/Secret1')]"],
                         "allowExtensionOperations": true,
                         "requireGuestProvisionSignal": true
                     },
