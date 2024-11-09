@@ -58,7 +58,7 @@ steps:
     azureResourceManagerConnection: 'Azure subscription 1(188533e8-ed54-47d2-857a-0620ebdeb029)'
     subscriptionId: '188533e8-ed54-47d2-857a-0620ebdeb029'
     action: 'Create Or Update Resource Group'
-    resourceGroupName: 'Devoir1'
+    resourceGroupName: 'ScaleSet1'
     location: 'East US'
     templateLocation: 'Linked artifact'
     csmFile: '$(Build.SourcesDirectory)/RessourceGroup/LinuxVirtualMachineScaleSet.json'
