@@ -2,9 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vaults_KeyVault_CoursCloud_name": {
-            "type": "String"
-        },
         "virtualMachineScaleSets_VM_group_name": {
             "defaultValue": "VM-group",
             "type": "String"
@@ -20,14 +17,9 @@
         "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
             "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
             "type": "String"
-        },
-        "adminPassSecret": {
-            "type": "String"
-        },
-        "secret1Secret": {
-            "type": "String"
         }
     },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets",
@@ -75,20 +67,7 @@
                                 "assessmentMode": "ImageDefault"
                             }
                         },
-                        "secrets": [
-                            {
-                                "sourceVault": {
-                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/[parameters('vaults_KeyVault_CoursCloud_name')]"
-                                },
-                                "secretUri": "https://[parameters('vaults_KeyVault_CoursCloud_name')].vault.azure.net/secrets/AdminPass"
-                            },
-                            {
-                                "sourceVault": {
-                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/[parameters('vaults_KeyVault_CoursCloud_name')]"
-                                },
-                                "secretUri": "https://[parameters('vaults_KeyVault_CoursCloud_name')].vault.azure.net/secrets/Secret1"
-                            }
-                        ],
+                        "secrets": [],
                         "allowExtensionOperations": true,
                         "requireGuestProvisionSignal": true
                     },
@@ -184,6 +163,30 @@
                 "platformFaultDomainCount": 1,
                 "constrainedMaximumCapacity": false
             }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_93ae4b66')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+            ],
+            "zones": [
+                "1"
+            ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_f3c1fee3')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+            ],
+            "zones": [
+                "2"
+            ]
         }
     ]
 }
