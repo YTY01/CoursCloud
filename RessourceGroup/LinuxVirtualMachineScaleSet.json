@@ -31,7 +31,7 @@
             "type": "Microsoft.Compute/virtualMachineScaleSets",
             "apiVersion": "2021-03-01",
             "name": "[parameters('virtualMachineScaleSets_VM_devoir1_name')]",
-            "location": "eastcanada",
+            "location": "eastus",
             "sku": {
                 "name": "Standard_DC1s_v2",
                 "tier": "Standard",
@@ -174,7 +174,7 @@
             "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
             "apiVersion": "2021-03-01",
             "name": "[concat(parameters('virtualMachineScaleSets_VM_devoir1_name'), '/', parameters('virtualMachineScaleSets_VM_devoir1_name'), '_7e07cd4d')]",
-            "location": "eastcanada",
+            "location": "eastus",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_devoir1_name'))]"
             ],
@@ -186,7 +186,7 @@
             "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
             "apiVersion": "2021-03-01",
             "name": "[concat(parameters('virtualMachineScaleSets_VM_devoir1_name'), '/', parameters('virtualMachineScaleSets_VM_devoir1_name'), '_e93cbfd8')]",
-            "location": "eastcanada",
+            "location": "eastus",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_devoir1_name'))]"
             ],
