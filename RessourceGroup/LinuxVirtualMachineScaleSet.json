@@ -19,10 +19,10 @@
             "type": "String"
         },
         "adminPassSecret": {
-          "type": "String"
+            "type": "String"
         },
         "secret1Secret": {
-          "type": "String"
+            "type": "String"
         }
     },
     "variables": {},
