@@ -76,19 +76,19 @@
                             }
                         },
                         "secrets": [
-                            {
-                                "sourceVault": {
-                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/KeyVault-CoursCloud"
-                                },
-                                "secretUri": "[reference(parameters('adminPassSecret'), '2019-09-01').value]"
+                        {
+                            "sourceVault": {
+                                "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/KeyVault-CoursCloud"
                             },
-                            {
-                                "sourceVault": {
-                                    "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/KeyVault-CoursCloud"
-                                },
-                                "secretUri": "[reference(parameters('secret1Secret'), '2019-09-01').value]"
-                            }
-                        ],
+                            "secretUri": "[reference('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/KeyVault-CoursCloud/secrets/AdminPass', '2019-09-01').secretUri]"
+                        },
+                        {
+                            "sourceVault": {
+                                "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/KeyVault-CoursCloud"
+                            },
+                            "secretUri": "[reference('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/KeyVault-CoursCloud/secrets/Secret1', '2019-09-01').secretUri]"
+                        }
+                    ],
                         "allowExtensionOperations": true,
                         "requireGuestProvisionSignal": true
                     },
