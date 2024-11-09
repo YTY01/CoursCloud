@@ -25,6 +25,7 @@
             "type": "String"
         }
     },
+    "variables": {},
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets",
@@ -46,11 +47,16 @@
                 "upgradePolicy": {
                     "mode": "Manual"
                 },
+                "scaleInPolicy": {
+                    "rules": [
+                        "Default"
+                    ],
+                    "forceDeletion": false
+                },
                 "virtualMachineProfile": {
                     "osProfile": {
                         "computerNamePrefix": "vm-groups",
                         "adminUsername": "coursCloud",
-                        "adminPassword": "[reference(concat('https://', parameters('vaults_KeyVault_CoursCloud_name'), '.vault.azure.net/secrets/', parameters('adminPassSecret')), '2024-04-01').value]",
                         "linuxConfiguration": {
                             "disablePasswordAuthentication": true,
                             "ssh": {
@@ -66,7 +72,10 @@
                                 "patchMode": "ImageDefault",
                                 "assessmentMode": "ImageDefault"
                             }
-                        }
+                        },
+                        "secrets": [],
+                        "allowExtensionOperations": true,
+                        "requireGuestProvisionSignal": true
                     },
                     "storageProfile": {
                         "osDisk": {
@@ -88,11 +97,18 @@
                         "diskControllerType": "SCSI"
                     },
                     "networkProfile": {
+                        "networkApiVersion": "2020-11-01",
                         "networkInterfaceConfigurations": [
                             {
                                 "name": "VM1-vnet-nic01",
                                 "properties": {
                                     "primary": true,
+                                    "enableAcceleratedNetworking": false,
+                                    "disableTcpStateTracking": false,
+                                    "enableIPForwarding": false,
+                                    "auxiliaryMode": "None",
+                                    "auxiliarySku": "None",
+                                    "deleteOption": "Delete",
                                     "ipConfigurations": [
                                         {
                                             "name": "VM1-vnet-nic01-defaultIpConfiguration",
@@ -101,7 +117,22 @@
                                                 "subnet": {
                                                     "id": "[concat(parameters('virtualNetworks_VM1_vnet_externalid'), '/subnets/default')]"
                                                 },
-                                                "primary": true
+                                                "primary": true,
+                                                "publicIPAddressConfiguration": {
+                                                    "name": "publicIp-VM1-vnet-nic01",
+                                                    "properties": {
+                                                        "idleTimeoutInMinutes": 15,
+                                                        "ipTags": [],
+                                                        "publicIPAddressVersion": "IPv4"
+                                                    }
+                                                },
+                                                "applicationSecurityGroups": [],
+                                                "loadBalancerBackendAddressPools": [
+                                                    {
+                                                        "id": "[concat(parameters('loadBalancers_LoadBalancer_Devoir1_externalid'), '/backendAddressPools/BackEnd_Pool')]"
+                                                    }
+                                                ],
+                                                "applicationGatewayBackendAddressPools": []
                                             }
                                         }
                                     ],
@@ -138,6 +169,30 @@
                 "platformFaultDomainCount": 1,
                 "constrainedMaximumCapacity": false
             }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_93ae4b66')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+            ],
+            "zones": [
+                "1"
+            ]
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_f3c1fee3')]",
+            "location": "eastus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+            ],
+            "zones": [
+                "2"
+            ]
         }
     ]
 }
