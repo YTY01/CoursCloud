@@ -11,14 +11,11 @@ trigger:
 pool:
   vmImage: ubuntu-latest
   
-variables:
+variables: #Déclaration des variables (Seulement CloudInitContent)
 - name: "CloudInitContent"
 
 steps:
-- bash:
-    tree $(Build.SourcesDirectory)
-
-- task: AzureResourceManagerTemplateDeployment@3
+- task: AzureResourceManagerTemplateDeployment@3 #Deployment du keyvault avec override des secrets qui sont définis dans les variables du pipeline. Secret1 était le premier, pour faire un test
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'Azure subscription 1(188533e8-ed54-47d2-857a-0620ebdeb029)'
@@ -32,14 +29,14 @@ steps:
     overrideParameters: '-adminPassSecret $(adminPassSecret) -secret1Secret $(secret1Secret)'
     deploymentMode: 'Incremental'
     
-- task: AzureKeyVault@2
+- task: AzureKeyVault@2 #Get des values dans le keyvault
   inputs:
     azureSubscription: 'Azure subscription 1(188533e8-ed54-47d2-857a-0620ebdeb029)'
     KeyVaultName: 'KeyVault-CoursCloud'
     SecretsFilter: 'AdminPass,Secret1'
     RunAsPreJob: false
 
-- task: PowerShell@2
+- task: PowerShell@2 #Transformation du cloudInit en base 64 pour le faire fonctionner sur windows
   inputs:
     targetType: 'inline'
     script: |
@@ -49,10 +46,10 @@ steps:
       Write-Host $encodedContent
       Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
 
-- script:
+- script: #Echo pour s'assurer qu'il ait été parse
     echo $(CloudInitContent)
 
-- task: AzureResourceManagerTemplateDeployment@3
+- task: AzureResourceManagerTemplateDeployment@3 #Deploy du Scale set en ovrridant le adminPass et le custom data pour les passer au script de deployment
   inputs:
     deploymentScope: 'Resource Group'
     azureResourceManagerConnection: 'Azure subscription 1(188533e8-ed54-47d2-857a-0620ebdeb029)'
