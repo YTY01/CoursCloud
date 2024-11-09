@@ -38,7 +38,8 @@
                 "capacity": 2
             },
             "zones": [
-                "1"
+                "1",
+                "2"
             ],
             "properties": {
                 "singlePlacementGroup": false,
@@ -190,7 +191,7 @@
                 "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_devoir1_name'))]"
             ],
             "zones": [
-                "1"
+                "2"
             ]
         }
     ]
