@@ -39,7 +39,7 @@
             },
             "zones": [
                 "1",
-                "3"
+                "2"
             ],
             "properties": {
                 "singlePlacementGroup": false,
@@ -191,7 +191,7 @@
                 "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_devoir1_name'))]"
             ],
             "zones": [
-                "3"
+                "2"
             ]
         }
     ]
