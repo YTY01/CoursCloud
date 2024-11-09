@@ -174,7 +174,7 @@
             "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
             "apiVersion": "2024-07-01",
             "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_93ae4b66')]",
-            "location": "eastus",
+            "location": "eastus2",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
             ],
@@ -186,7 +186,7 @@
             "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
             "apiVersion": "2024-07-01",
             "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_f3c1fee3')]",
-            "location": "eastus",
+            "location": "eastus2",
             "dependsOn": [
                 "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
             ],
