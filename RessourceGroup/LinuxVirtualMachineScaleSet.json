@@ -2,26 +2,20 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vaults_KeyVault_CoursCloud_name": {
-            "type": "String"
-        },
-        "virtualMachineScaleSets_VM_group_name": {
-            "defaultValue": "VM-group",
+        "virtualMachineScaleSets_VM_devoir1_name": {
+            "defaultValue": "VM-devoir1",
             "type": "String"
         },
         "virtualNetworks_VM1_vnet_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/virtualNetworks/VM1-vnet",
             "type": "String"
         },
         "loadBalancers_LoadBalancer_Devoir1_externalid": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/loadBalancers/LoadBalancer_Devoir1",
             "type": "String"
         },
         "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
-            "type": "String"
-        },
-        "adminPassSecret": {
-            "type": "String"
-        },
-        "secret1Secret": {
+            "defaultValue": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/Devoir1/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet-nic01",
             "type": "String"
         }
     },
@@ -30,7 +24,7 @@
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets",
             "apiVersion": "2024-07-01",
-            "name": "[parameters('virtualMachineScaleSets_VM_group_name')]",
+            "name": "[parameters('virtualMachineScaleSets_VM_devoir1_name')]",
             "location": "eastus",
             "sku": {
                 "name": "Standard_DC1s_v2",
@@ -55,15 +49,15 @@
                 },
                 "virtualMachineProfile": {
                     "osProfile": {
-                        "computerNamePrefix": "vm-groups",
-                        "adminUsername": "coursCloud",
+                        "computerNamePrefix": "vm-devoir",
+                        "adminUsername": "azureuser",
                         "linuxConfiguration": {
                             "disablePasswordAuthentication": true,
                             "ssh": {
                                 "publicKeys": [
                                     {
-                                        "path": "/home/coursCloud/.ssh/authorized_keys",
-                                        "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQClAXh5lKVUtKhUcY5qID222s76EP469+n6MtGjDMmOEC7iQnznprdnPxNua2s3M+HUhgs6FZt8MQXtRFpmgR2XFMPXVf2neDXFRCqpYaxYQ4EnlYxSxTx+BiUICPlCcyZgwuAxj3pZIoO8XN/FzEmAiD41Z5az9ewxNA09sxJEXtl+BypFkrr8weXZxXXemXoSFR7hz7ciCnaKYIRYhXA/LpFK8rkHd8ByEwiz3Jnf31sbRGv6GggdRsp3gGCgdmBaqrMkCu1nLh1hP+1jubks+MbV/On/MFnDj1CMr11s1juNh5+3Q7ylVlGbx5rtmQwgmTks2KHgKLKA7WRcMFOuqlOshmmMTxlXjDFZ9FLuxcPOoZiRk0dxaaSYCKdzZg8kwgmwAr7PCUgrl1u4PBi2ByYE8XEOsq+ZY4hc7NYB2C+0wevFgqNCN7bU+Gn6qfLTxlNkCwa8O+NZje4pDriN0irLX25v6rOLdlMLQPAnfeUH7lFX+JG0aKeYZj4DHpU= generated-by-azure"
+                                        "path": "/home/azureuser/.ssh/authorized_keys",
+                                        "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDlddbc2Ji5mc1pnlqgAnXygLYvjPlfGBehWcVXaHj2EhpWF/oksrcISQIYGrhr1YpuYy1tBatwnfNRUu/IlQa3WyJFMbwGQHvo1zlb2eRG2Guhe0gQorOqC1XYAfyilm24HbyJP+MBXniBN/VRDj5P6oWzoEeO1sy0miblXvsKkp7die3N7PECX8riDdUlePkOvP7HcShoWNksIbfkRaW6okNas7gRQjLZdzXiWUqVLKgJqiCWvQnUW0ETcIa8E3MZyMPFpTTqjPIMEgpVwEeq+HvacZvBOmOzazmom9q3iySeTRKEzfsuAqcQhA5qMO5o8atZTUS7YDx4dZb5J/LHEpH4egeM+hCwKty8aZ5YdTDT9r+QWNKE7npcj2TgoZ2xhaZfo6ZPNvgzH10uDcnWA6xBp/XX1nTkxBV5tiKbt5tW18hT+11+GUOXbcufSgUzpgFMGlgvYs3YvAXk+s/4L9drjyM9xsY7m1pHWG7d3QVsQ5UyE0IzsHQUmqht0zk= generated-by-azure"
                                     }
                                 ]
                             },
@@ -173,10 +167,10 @@
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
             "apiVersion": "2024-07-01",
-            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_93ae4b66')]",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_devoir1_name'), '/', parameters('virtualMachineScaleSets_VM_devoir1_name'), '_7e07cd4d')]",
             "location": "eastus",
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_devoir1_name'))]"
             ],
             "zones": [
                 "1"
@@ -185,10 +179,10 @@
         {
             "type": "Microsoft.Compute/virtualMachineScaleSets/virtualMachines",
             "apiVersion": "2024-07-01",
-            "name": "[concat(parameters('virtualMachineScaleSets_VM_group_name'), '/', parameters('virtualMachineScaleSets_VM_group_name'), '_f3c1fee3')]",
+            "name": "[concat(parameters('virtualMachineScaleSets_VM_devoir1_name'), '/', parameters('virtualMachineScaleSets_VM_devoir1_name'), '_e93cbfd8')]",
             "location": "eastus",
             "dependsOn": [
-                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_group_name'))]"
+                "[resourceId('Microsoft.Compute/virtualMachineScaleSets', parameters('virtualMachineScaleSets_VM_devoir1_name'))]"
             ],
             "zones": [
                 "2"
