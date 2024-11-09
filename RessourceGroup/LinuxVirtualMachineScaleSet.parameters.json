@@ -13,6 +13,12 @@
         },
         "networkSecurityGroups_basicNsgVM1_vnet_nic01_externalid": {
             "value": null
+        },
+        "adminPassSecret": {
+          "value": null
+        },
+        "secret1Secret": {
+          "value": null
         }
     }
 }
