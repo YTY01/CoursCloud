@@ -80,13 +80,13 @@
                                 "sourceVault": {
                                     "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/[parameters('vaults_KeyVault_CoursCloud_name')]"
                                 },
-                                "secretUri": "[reference(concat('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/', parameters('vaults_KeyVault_CoursCloud_name'), '/secrets/AdminPass'), '2019-09-01').value]"
+                                "secretUri": "https://[parameters('vaults_KeyVault_CoursCloud_name')].vault.azure.net/secrets/AdminPass"
                             },
                             {
                                 "sourceVault": {
                                     "id": "/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/[parameters('vaults_KeyVault_CoursCloud_name')]"
                                 },
-                                "secretUri": "[reference(concat('/subscriptions/188533e8-ed54-47d2-857a-0620ebdeb029/resourceGroups/KeyVault/providers/Microsoft.KeyVault/vaults/', parameters('vaults_KeyVault_CoursCloud_name'), '/secrets/Secret1'), '2019-09-01').value]"
+                                "secretUri": "https://[parameters('vaults_KeyVault_CoursCloud_name')].vault.azure.net/secrets/Secret1"
                             }
                         ],
                         "allowExtensionOperations": true,
